@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(lcd_demo_cpp LANGUAGES C CXX)
+project(lcd LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -30,8 +30,8 @@ target_link_libraries(lcd_display PUBLIC tools ${FREETYPE_LIBRARIES})
 target_compile_options(lcd_display PRIVATE -Wall -Wextra -Wpedantic)
 
 # Demo executable
-add_executable(lcd_demo src/main_demo.cpp)
-target_link_libraries(lcd_demo PRIVATE lcd_display tools)
+add_executable(lcd src/main_demo.cpp)
+target_link_libraries(lcd PRIVATE lcd_display tools)
 
 # Testing with GoogleTest
 option(BUILD_TESTS "Build the tests" ON)

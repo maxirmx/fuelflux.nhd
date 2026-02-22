@@ -55,9 +55,9 @@ int main(int argc, char** argv) {
             Ili9488 lcd(spi, dcLine, rstLine, width, height);
             lcd.reset();
             lcd.init();
-            // lcd.fill(0xF800);  // Red screen - should appear immediately
+            lcd.fill(0xF800);  // Red screen - should appear immediately
             std::this_thread::sleep_for(std::chrono::milliseconds(2000));  // Wait 2 sec to see it
-            //lcd.fill(0x0000);
+            lcd.fill(0x0000);
 
             FourLineDisplay display(width, height, small_font, large_font);
             if (!display.initialize(font)) {
@@ -79,13 +79,13 @@ int main(int argc, char** argv) {
                 display.puts(0, "Статус: Выполняется");
                 display.puts(1, "Счётчик: " + std::to_string(counter));
                 display.puts(2, "FuelFlux ILI9488");
-                display.puts(3, "Версия 2.1");
+                display.puts(3, "Ver 2.1");
 
                 const auto& fb = display.render();
                 lcd.set_mono_framebuffer(fb, 0xFFFF, 0x0000);
 
                 ++counter;
-                std::this_thread::sleep_for(std::chrono::milliseconds(500));
+                //std::this_thread::sleep_for(std::chrono::milliseconds(5));
             }
         }
 
@@ -126,7 +126,7 @@ int main(int argc, char** argv) {
             lcd.set_framebuffer(fb);
 
             ++counter;
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
         }
 
     } catch (const std::exception& e) {
