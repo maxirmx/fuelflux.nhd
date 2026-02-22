@@ -34,8 +34,8 @@ jobs:
       
     - name: Check build artifacts
       run: |
-        test -f build/lcd_demo || (echo "lcd_demo not found" && exit 1)
-        echo "Build successful - lcd_demo created"
+        test -f build/lcd || (echo "lcd demo not found" && exit 1)
+        echo "Build successful - lcd demo created"
     
     - name: Run tests
       run: cd build && ctest --output-on-failure
