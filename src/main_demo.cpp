@@ -82,7 +82,7 @@ void validate_options(bool use_nhd, int spi_hz, int contrast,
         throw std::invalid_argument(
             "--spi-hz exceeds the NHD serial-interface limit of 20000000 Hz");
     }
-    if (contrast < 0 || contrast > 0x3F) {
+    if (use_nhd && (contrast < 0 || contrast > 0x3F)) {
         throw std::invalid_argument("--contrast must be between 0 and 63");
     }
     if (interval_ms < 0) {
