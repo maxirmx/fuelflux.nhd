@@ -13,20 +13,33 @@ void St7565::reset() {
     rst_.set(false);
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
     rst_.set(true);
-    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 }
 
-void St7565::init() {
-    // ST7565-class init (good default for ST7565/ST7567 family)
-    cmd(0xAE); // display OFF
-    cmd(0xA2); // bias 1/9
-    cmd(0xA0); // SEG normal (A0/A1 flips)
-    cmd(0xC8); // COM reversed (C0/C8 flips)
-    cmd(0x2F); // power: booster+regulator+follower ON
-    cmd(0x26); // resistor ratio
-    cmd(0x81); // electronic volume
-    cmd(0x16); // contrast (00..3F)
-    cmd(0xAF); // display ON
+std::array<uint8_t, 9> St7565::nhd_c12864a1z_init_sequence(
+    uint8_t contrast, bool reverse_segments, bool reverse_common) {
+    return {
+        static_cast<uint8_t>(reverse_segments ? 0xA1 : 0xA0),
+        0xAE,
+        static_cast<uint8_t>(reverse_common ? 0xC8 : 0xC0),
+        0xA2,
+        0x2F,
+        0x26,
+        0x81,
+        static_cast<uint8_t>(contrast & 0x3F),
+        0xAF,
+    };
+}
+
+void St7565::init(uint8_t contrast, bool reverse_segments, bool reverse_common) {
+    // NHD-C12864A1Z-FSW-FBW-HTT / ST7565P initialization.
+    // Defaults follow the module datasheet; the two direction bits allow the
+    // test fixture to compensate for a physically rotated display.
+    const auto sequence = nhd_c12864a1z_init_sequence(
+        contrast, reverse_segments, reverse_common);
+    for (const uint8_t value : sequence) {
+        cmd(value);
+    }
 }
 
 void St7565::set_contrast(uint8_t v) { cmd(0x81); cmd(v & 0x3F); }
