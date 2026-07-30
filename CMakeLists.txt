@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(lcd LANGUAGES C CXX)
+project(fuelflux_lcd_test_demo LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -32,6 +32,7 @@ target_compile_options(lcd_display PRIVATE -Wall -Wextra -Wpedantic)
 # Demo executable
 add_executable(lcd src/main_demo.cpp)
 target_link_libraries(lcd PRIVATE lcd_display tools)
+target_compile_options(lcd PRIVATE -Wall -Wextra -Wpedantic)
 
 # Testing with GoogleTest
 option(BUILD_TESTS "Build the tests" ON)
@@ -60,6 +61,9 @@ if(BUILD_TESTS)
     add_executable(test_ft_text
         tests/test_ft_text.cpp
     )
+    add_executable(test_st7565
+        tests/test_st7565.cpp
+    )
     target_link_libraries(test_four_line_display
         PRIVATE
         lcd_display
@@ -81,10 +85,18 @@ if(BUILD_TESTS)
         GTest::gtest
         GTest::gtest_main
     )
+    target_link_libraries(test_st7565
+        PRIVATE
+        lcd_display
+        tools
+        GTest::gtest
+        GTest::gtest_main
+    )
 
     # Discover tests
     include(GoogleTest)
     gtest_discover_tests(test_four_line_display)
     gtest_discover_tests(test_ili9488)
     gtest_discover_tests(test_ft_text)
+    gtest_discover_tests(test_st7565)
 endif()
